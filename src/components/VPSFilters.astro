@@ -1,9 +1,15 @@
 ---
+import { z } from 'astro:content';
+
 interface Props {
 	providers: string[];
 }
 
 const { providers } = Astro.props;
+
+// Validate props at runtime
+const ProvidersSchema = z.array(z.string().min(1, 'Provider name cannot be empty'));
+const validatedProviders = ProvidersSchema.parse(providers);
 ---
 
 <div class="filters-container">
@@ -17,7 +23,7 @@ const { providers } = Astro.props;
 			<label for="provider-filter">Provider:</label>
 			<select id="provider-filter" class="filter-select">
 				<option value="">All Providers</option>
-				{providers.map(provider => (
+				{validatedProviders.map(provider => (
 					<option value={provider}>{provider}</option>
 				))}
 			</select>

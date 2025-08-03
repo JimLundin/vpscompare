@@ -1,11 +1,16 @@
 ---
-import type { VPSPlan } from '../types/vps.js';
+import { z } from 'astro:content';
+import { VPSPlanSchema, type VPSPlan } from '../types/vps.js';
 
 interface Props {
 	plans: VPSPlan[];
 }
 
 const { plans } = Astro.props;
+
+// Validate props at runtime
+const PlansArraySchema = z.array(VPSPlanSchema);
+const validatedPlans = PlansArraySchema.parse(plans);
 ---
 
 <div class="vps-table-container">
@@ -25,7 +30,7 @@ const { plans } = Astro.props;
 			</tr>
 		</thead>
 		<tbody>
-			{plans.map((plan) => (
+			{validatedPlans.map((plan) => (
 				<tr>
 					<td class="provider-cell">
 						<strong>{plan.provider}</strong>

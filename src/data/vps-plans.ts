@@ -1,6 +1,8 @@
-import type { VPSPlan } from '../types/vps.js';
+import { z } from 'astro:content';
+import { VPSPlanSchema, type VPSPlan } from '../types/vps.js';
 
-export const vpsPlans: VPSPlan[] = [
+// Raw data that will be validated
+const rawVpsPlans = [
 	{
 		id: 'digitalocean-basic',
 		provider: 'DigitalOcean',
@@ -123,4 +125,8 @@ export const vpsPlans: VPSPlan[] = [
 		support: '24/7 Ticket',
 		website: 'https://contabo.com'
 	}
-];
+] as const;
+
+// Validate and export the data with runtime type checking
+const VpsPlansArraySchema = z.array(VPSPlanSchema);
+export const vpsPlans: VPSPlan[] = VpsPlansArraySchema.parse(rawVpsPlans);
