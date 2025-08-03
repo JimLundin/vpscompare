@@ -17,10 +17,22 @@ const formatPrice = (price: number, currency: string) => {
 	return `${symbol}${price}`;
 };
 
-// Extract RAM number for comparison
-const getRamValue = (ram: string) => {
-	const match = ram.match(/(\d+)/);
-	return match ? parseInt(match[1]) : 0;
+// Format spec display
+const formatSpec = (spec: { amount: number; unit: string; type?: string; cores?: number; unlimited?: boolean }) => {
+	if ('cores' in spec) {
+		return `${spec.cores} ${spec.type || 'vCPU'}`;
+	}
+	if (spec.unlimited) {
+		return 'Unlimited';
+	}
+	if (spec.type) {
+		return `${spec.amount} ${spec.unit} ${spec.type}`;
+	}
+	return `${spec.amount} ${spec.unit}`;
+};
+
+const formatUptime = (uptime: { percentage: number; sla: boolean }) => {
+	return `${uptime.percentage}%${uptime.sla ? ' SLA' : ''}`;
 };
 ---
 
@@ -29,7 +41,7 @@ const getRamValue = (ram: string) => {
 	data-vps-card="true"
 	data-provider={data.provider}
 	data-price={data.price.monthly}
-	data-ram={getRamValue(data.specs.ram)}
+	data-ram={data.specs.ram.amount}
 	data-featured={data.featured ? 'true' : 'false'}
 >
 	{featured && (
@@ -62,19 +74,19 @@ const getRamValue = (ram: string) => {
 		<div class="vps-card-specs">
 			<div class="spec-item">
 				<span class="spec-label">CPU:</span>
-				<span class="spec-value">{data.specs.cpu}</span>
+				<span class="spec-value">{formatSpec(data.specs.cpu)}</span>
 			</div>
 			<div class="spec-item">
 				<span class="spec-label">RAM:</span>
-				<span class="spec-value">{data.specs.ram}</span>
+				<span class="spec-value">{formatSpec(data.specs.ram)}</span>
 			</div>
 			<div class="spec-item">
 				<span class="spec-label">Storage:</span>
-				<span class="spec-value">{data.specs.storage}</span>
+				<span class="spec-value">{formatSpec(data.specs.storage)}</span>
 			</div>
 			<div class="spec-item">
 				<span class="spec-label">Bandwidth:</span>
-				<span class="spec-value">{data.specs.bandwidth}</span>
+				<span class="spec-value">{formatSpec(data.specs.bandwidth)}</span>
 			</div>
 		</div>
 
@@ -107,7 +119,7 @@ const getRamValue = (ram: string) => {
 			<div class="vps-card-meta">
 				<div class="uptime-info">
 					<span class="meta-label">Uptime:</span>
-					<Badge variant="success" size="sm">{data.uptime}</Badge>
+					<Badge variant="success" size="sm">{formatUptime(data.uptime)}</Badge>
 				</div>
 				<div class="support-info">{data.support}</div>
 			</div>
@@ -131,6 +143,9 @@ const getRamValue = (ram: string) => {
 		border: 1px solid #e5e7eb;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 		transition: all 0.2s ease;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.vps-card:hover {
@@ -152,6 +167,9 @@ const getRamValue = (ram: string) => {
 
 	.vps-card-content {
 		padding: 1.5rem;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
 	}
 
 	.vps-card-header {
@@ -239,6 +257,7 @@ const getRamValue = (ram: string) => {
 		justify-content: space-between;
 		padding-top: 1rem;
 		border-top: 1px solid #f3f4f6;
+		margin-top: auto;
 	}
 
 	.vps-card-meta {

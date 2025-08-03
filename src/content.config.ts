@@ -14,14 +14,31 @@ const vpsSchema = z.object({
 		})
 	}),
 	specs: z.object({
-		cpu: z.string().min(1, 'CPU specification is required'),
-		ram: z.string().min(1, 'RAM specification is required'),
-		storage: z.string().min(1, 'Storage specification is required'),
-		bandwidth: z.string().min(1, 'Bandwidth specification is required')
+		cpu: z.object({
+			cores: z.number().int().positive('CPU cores must be a positive integer'),
+			type: z.enum(['vCPU', 'CPU', 'Core']).default('vCPU')
+		}),
+		ram: z.object({
+			amount: z.number().positive('RAM amount must be positive'),
+			unit: z.enum(['MB', 'GB', 'TB']).default('GB')
+		}),
+		storage: z.object({
+			amount: z.number().positive('Storage amount must be positive'),
+			unit: z.enum(['GB', 'TB']).default('GB'),
+			type: z.enum(['SSD', 'NVMe', 'HDD', 'EBS']).default('SSD')
+		}),
+		bandwidth: z.object({
+			amount: z.number().nonnegative('Bandwidth amount must be non-negative').optional(),
+			unit: z.enum(['GB', 'TB']).default('TB'),
+			unlimited: z.boolean().default(false)
+		})
 	}),
 	features: z.array(z.string()).min(1, 'At least one feature is required'),
 	locations: z.array(z.string()).min(1, 'At least one location is required'),
-	uptime: z.string().regex(/^\d+(\.\d+)?%$/, 'Uptime must be in format "99.9%"'),
+	uptime: z.object({
+		percentage: z.number().min(0).max(100, 'Uptime percentage must be between 0 and 100'),
+		sla: z.boolean().default(false)
+	}),
 	support: z.string().min(1, 'Support information is required'),
 	website: z.string().url('Website must be a valid URL'),
 	// Optional fields for future extensibility
