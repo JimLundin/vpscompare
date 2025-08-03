@@ -1,0 +1,70 @@
+---
+interface Props {
+	fallback?: string;
+	class?: string;
+}
+
+const { fallback = 'Something went wrong. Please try again later.', class: className = '' } = Astro.props;
+---
+
+<div class={`error-boundary ${className}`}>
+	<div class="error-icon">
+		<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+		</svg>
+	</div>
+	<h3 class="error-title">Error Loading Content</h3>
+	<p class="error-message">{fallback}</p>
+	<button onclick="window.location.reload()" class="error-retry-btn">
+		Retry
+	</button>
+</div>
+
+<style>
+	.error-boundary {
+		background: #fef2f2;
+		border: 1px solid #fecaca;
+		border-radius: 0.5rem;
+		padding: 1.5rem;
+		text-align: center;
+	}
+
+	.error-icon {
+		color: #dc2626;
+		margin-bottom: 0.5rem;
+	}
+
+	.error-icon svg {
+		width: 2rem;
+		height: 2rem;
+		margin: 0 auto;
+	}
+
+	.error-title {
+		font-size: 1.125rem;
+		font-weight: 500;
+		color: #7f1d1d;
+		margin-bottom: 0.5rem;
+	}
+
+	.error-message {
+		color: #b91c1c;
+		font-size: 0.875rem;
+		margin-bottom: 1rem;
+	}
+
+	.error-retry-btn {
+		padding: 0.5rem 1rem;
+		background: #dc2626;
+		color: white;
+		border-radius: 0.5rem;
+		font-size: 0.875rem;
+		transition: background-color 0.2s ease;
+		cursor: pointer;
+		border: none;
+	}
+
+	.error-retry-btn:hover {
+		background: #b91c1c;
+	}
+</style>

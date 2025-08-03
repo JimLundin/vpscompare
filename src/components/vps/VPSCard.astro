@@ -1,0 +1,263 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Button from '../ui/Button.astro';
+import Badge from '../ui/Badge.astro';
+
+interface Props {
+	plan: CollectionEntry<'vpsPlans'>;
+	featured?: boolean;
+}
+
+const { plan, featured = false } = Astro.props;
+const { data } = plan;
+
+// Format price display
+const formatPrice = (price: number, currency: string) => {
+	const symbol = currency === 'USD' ? '$' : currency === 'EUR' ? '€' : '£';
+	return `${symbol}${price}`;
+};
+
+// Extract RAM number for comparison
+const getRamValue = (ram: string) => {
+	const match = ram.match(/(\d+)/);
+	return match ? parseInt(match[1]) : 0;
+};
+---
+
+<div 
+	class={`vps-card ${featured ? 'vps-card-featured' : ''}`}
+	data-vps-card="true"
+	data-provider={data.provider}
+	data-price={data.price.monthly}
+	data-ram={getRamValue(data.specs.ram)}
+	data-featured={data.featured ? 'true' : 'false'}
+>
+	{featured && (
+		<div class="featured-badge">
+			<Badge variant="info" size="md">Featured</Badge>
+		</div>
+	)}
+	
+	<div class="vps-card-content">
+		<!-- Header -->
+		<div class="vps-card-header">
+			<div class="vps-card-info">
+				<h3 class="vps-card-provider">{data.provider}</h3>
+				<p class="vps-card-name">{data.name}</p>
+			</div>
+			<div class="vps-card-pricing">
+				<div class="vps-card-price">
+					{formatPrice(data.price.monthly, data.price.currency)}
+				</div>
+				<div class="vps-card-period">per month</div>
+				{data.price.yearly && (
+					<div class="vps-card-yearly">
+						{formatPrice(data.price.yearly, data.price.currency)}/year
+					</div>
+				)}
+			</div>
+		</div>
+
+		<!-- Specs -->
+		<div class="vps-card-specs">
+			<div class="spec-item">
+				<span class="spec-label">CPU:</span>
+				<span class="spec-value">{data.specs.cpu}</span>
+			</div>
+			<div class="spec-item">
+				<span class="spec-label">RAM:</span>
+				<span class="spec-value">{data.specs.ram}</span>
+			</div>
+			<div class="spec-item">
+				<span class="spec-label">Storage:</span>
+				<span class="spec-value">{data.specs.storage}</span>
+			</div>
+			<div class="spec-item">
+				<span class="spec-label">Bandwidth:</span>
+				<span class="spec-value">{data.specs.bandwidth}</span>
+			</div>
+		</div>
+
+		<!-- Features -->
+		<div class="vps-card-section">
+			<h4 class="section-title">Features</h4>
+			<div class="features-list">
+				{data.features.slice(0, 4).map(feature => (
+					<Badge variant="default" size="sm">{feature}</Badge>
+				))}
+				{data.features.length > 4 && (
+					<Badge variant="default" size="sm">+{data.features.length - 4} more</Badge>
+				)}
+			</div>
+		</div>
+
+		<!-- Tags -->
+		{data.tags && data.tags.length > 0 && (
+			<div class="vps-card-section">
+				<div class="features-list">
+					{data.tags.map(tag => (
+						<Badge variant="info" size="sm">{tag}</Badge>
+					))}
+				</div>
+			</div>
+		)}
+
+		<!-- Footer -->
+		<div class="vps-card-footer">
+			<div class="vps-card-meta">
+				<div class="uptime-info">
+					<span class="meta-label">Uptime:</span>
+					<Badge variant="success" size="sm">{data.uptime}</Badge>
+				</div>
+				<div class="support-info">{data.support}</div>
+			</div>
+			<Button 
+				href={data.website} 
+				target="_blank" 
+				rel="noopener noreferrer"
+				size="sm"
+			>
+				View Plan
+			</Button>
+		</div>
+	</div>
+</div>
+
+<style>
+	.vps-card {
+		position: relative;
+		background: white;
+		border-radius: 0.75rem;
+		border: 1px solid #e5e7eb;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		transition: all 0.2s ease;
+	}
+
+	.vps-card:hover {
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		border-color: #d1d5db;
+	}
+
+	.vps-card-featured {
+		border-color: #bfdbfe;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.featured-badge {
+		position: absolute;
+		top: -0.75rem;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.vps-card-content {
+		padding: 1.5rem;
+	}
+
+	.vps-card-header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+
+	.vps-card-provider {
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: #111827;
+		margin-bottom: 0.25rem;
+	}
+
+	.vps-card-name {
+		font-size: 0.875rem;
+		color: #6b7280;
+	}
+
+	.vps-card-pricing {
+		text-align: right;
+	}
+
+	.vps-card-price {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #111827;
+	}
+
+	.vps-card-period {
+		font-size: 0.875rem;
+		color: #6b7280;
+	}
+
+	.vps-card-yearly {
+		font-size: 0.75rem;
+		color: #059669;
+		margin-top: 0.25rem;
+	}
+
+	.vps-card-specs {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.75rem;
+		margin-bottom: 1rem;
+		font-size: 0.875rem;
+	}
+
+	.spec-item {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.spec-label {
+		color: #6b7280;
+	}
+
+	.spec-value {
+		font-weight: 500;
+		color: #111827;
+	}
+
+	.vps-card-section {
+		margin-bottom: 1rem;
+	}
+
+	.section-title {
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: #111827;
+		margin-bottom: 0.5rem;
+	}
+
+	.features-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+	}
+
+	.vps-card-footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-top: 1rem;
+		border-top: 1px solid #f3f4f6;
+	}
+
+	.vps-card-meta {
+		font-size: 0.875rem;
+	}
+
+	.uptime-info {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.meta-label {
+		color: #6b7280;
+	}
+
+	.support-info {
+		font-size: 0.75rem;
+		color: #6b7280;
+		margin-top: 0.25rem;
+	}
+</style>

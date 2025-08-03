@@ -1,0 +1,133 @@
+[
+	{
+		"id": "digitalocean-basic",
+		"provider": "DigitalOcean",
+		"name": "Basic Droplet",
+		"price": {
+			"monthly": 6,
+			"yearly": 60,
+			"currency": "USD"
+		},
+		"specs": {
+			"cpu": "1 vCPU",
+			"ram": "1 GB",
+			"storage": "25 GB SSD",
+			"bandwidth": "1 TB"
+		},
+		"features": ["SSD Storage", "IPv6", "Monitoring", "Firewalls"],
+		"locations": ["NYC", "SF", "Amsterdam", "Singapore", "London"],
+		"uptime": "99.99%",
+		"support": "24/7 Community",
+		"website": "https://digitalocean.com",
+		"featured": true,
+		"tags": ["popular", "developer-friendly"]
+	},
+	{
+		"id": "linode-nanode",
+		"provider": "Linode",
+		"name": "Nanode 1GB",
+		"price": {
+			"monthly": 5,
+			"yearly": 50,
+			"currency": "USD"
+		},
+		"specs": {
+			"cpu": "1 vCPU",
+			"ram": "1 GB",
+			"storage": "25 GB SSD",
+			"bandwidth": "1 TB"
+		},
+		"features": ["SSD Storage", "IPv6", "Private Networking", "Backups Available"],
+		"locations": ["Atlanta", "Dallas", "Frankfurt", "London", "Tokyo"],
+		"uptime": "99.9%",
+		"support": "24/7 Ticket",
+		"website": "https://linode.com",
+		"tags": ["reliable", "performance"]
+	},
+	{
+		"id": "vultr-regular",
+		"provider": "Vultr",
+		"name": "Regular Performance",
+		"price": {
+			"monthly": 6,
+			"currency": "USD"
+		},
+		"specs": {
+			"cpu": "1 vCPU",
+			"ram": "1 GB",
+			"storage": "25 GB SSD",
+			"bandwidth": "1 TB"
+		},
+		"features": ["SSD Storage", "IPv6", "DDoS Protection", "Private Networking"],
+		"locations": ["New York", "Miami", "London", "Paris", "Tokyo", "Sydney"],
+		"uptime": "99.9%",
+		"support": "24/7 Ticket",
+		"website": "https://vultr.com",
+		"tags": ["global", "ddos-protection"]
+	},
+	{
+		"id": "hetzner-cx11",
+		"provider": "Hetzner",
+		"name": "CX11",
+		"price": {
+			"monthly": 3.29,
+			"currency": "EUR"
+		},
+		"specs": {
+			"cpu": "1 vCPU",
+			"ram": "2 GB",
+			"storage": "20 GB SSD",
+			"bandwidth": "20 TB"
+		},
+		"features": ["SSD Storage", "IPv6", "Private Networking", "Snapshots"],
+		"locations": ["Nuremberg", "Helsinki", "Falkenstein", "Ashburn"],
+		"uptime": "99.9%",
+		"support": "Business Hours",
+		"website": "https://hetzner.com",
+		"featured": true,
+		"tags": ["budget", "europe", "high-bandwidth"]
+	},
+	{
+		"id": "aws-t3-micro",
+		"provider": "AWS",
+		"name": "t3.micro",
+		"price": {
+			"monthly": 8.5,
+			"currency": "USD"
+		},
+		"specs": {
+			"cpu": "2 vCPU",
+			"ram": "1 GB",
+			"storage": "8 GB EBS",
+			"bandwidth": "Variable"
+		},
+		"features": ["Burstable Performance", "EBS Storage", "VPC", "Security Groups"],
+		"locations": ["Global (20+ regions)"],
+		"uptime": "99.99%",
+		"support": "Paid Plans Available",
+		"website": "https://aws.amazon.com",
+		"tags": ["enterprise", "scalable", "cloud-native"]
+	},
+	{
+		"id": "contabo-vps-s",
+		"provider": "Contabo",
+		"name": "VPS S",
+		"price": {
+			"monthly": 4.99,
+			"currency": "EUR"
+		},
+		"specs": {
+			"cpu": "4 vCPU",
+			"ram": "8 GB",
+			"storage": "50 GB SSD",
+			"bandwidth": "32 TB"
+		},
+		"features": ["SSD Storage", "DDoS Protection", "Snapshots", "Object Storage"],
+		"locations": ["Germany", "UK", "USA East", "USA West", "Singapore"],
+		"uptime": "99.9%",
+		"support": "24/7 Ticket",
+		"website": "https://contabo.com",
+		"featured": true,
+		"tags": ["value", "high-specs", "europe"]
+	}
+]

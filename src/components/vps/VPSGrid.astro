@@ -1,0 +1,72 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import VPSCard from './VPSCard.astro';
+
+interface Props {
+	plans: CollectionEntry<'vpsPlans'>[];
+	showFeatured?: boolean;
+}
+
+const { plans, showFeatured = true } = Astro.props;
+
+// Sort plans: featured first, then by price
+const sortedPlans = plans.sort((a, b) => {
+	if (showFeatured) {
+		if (a.data.featured && !b.data.featured) return -1;
+		if (!a.data.featured && b.data.featured) return 1;
+	}
+	return a.data.price.monthly - b.data.price.monthly;
+});
+---
+
+<div class="vps-grid">
+	{sortedPlans.map(plan => (
+		<VPSCard 
+			plan={plan} 
+			featured={showFeatured && plan.data.featured}
+		/>
+	))}
+</div>
+
+{plans.length === 0 && (
+	<div class="empty-state">
+		<div class="empty-title">No VPS plans found</div>
+		<div class="empty-subtitle">Try adjusting your filters</div>
+	</div>
+)}
+
+<style>
+	.vps-grid {
+		display: grid;
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+		gap: 1.5rem;
+	}
+
+	@media (min-width: 768px) {
+		.vps-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.vps-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: 3rem 0;
+	}
+
+	.empty-title {
+		color: #6b7280;
+		font-size: 1.125rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.empty-subtitle {
+		color: #9ca3af;
+		font-size: 0.875rem;
+	}
+</style>

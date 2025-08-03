@@ -1,0 +1,380 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	plans: CollectionEntry<'vpsPlans'>[];
+}
+
+const { plans } = Astro.props;
+
+// Extract unique providers and sort them
+const providers = [...new Set(plans.map(plan => plan.data.provider))].sort();
+
+// Get price range
+const prices = plans.map(plan => plan.data.price.monthly);
+const maxPrice = Math.ceil(Math.max(...prices));
+---
+
+<div class="filters-container">
+	<div class="filters-header">
+		<h3 class="filters-title">Filter VPS Plans</h3>
+		<button id="reset-filters" class="reset-btn">Reset All</button>
+	</div>
+	
+	<div class="filters-grid">
+		<!-- Provider Filter -->
+		<div class="filter-group">
+			<label for="provider-filter" class="filter-label">Provider</label>
+			<select id="provider-filter" class="filter-select">
+				<option value="">All Providers</option>
+				{providers.map(provider => (
+					<option value={provider}>{provider}</option>
+				))}
+			</select>
+		</div>
+
+		<!-- Price Filter -->
+		<div class="filter-group">
+			<label for="price-filter" class="filter-label">Max Price (Monthly)</label>
+			<div class="price-filter-container">
+				<input 
+					type="range" 
+					id="price-filter" 
+					class="price-slider"
+					min="0" 
+					max={maxPrice} 
+					step="1" 
+					value={maxPrice}
+				>
+				<div class="price-range">
+					<span>$0</span>
+					<span id="price-display" class="price-current">${maxPrice}</span>
+					<span>${maxPrice}</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- RAM Filter -->
+		<div class="filter-group">
+			<label for="ram-filter" class="filter-label">Minimum RAM</label>
+			<select id="ram-filter" class="filter-select">
+				<option value="">Any</option>
+				<option value="1">1 GB+</option>
+				<option value="2">2 GB+</option>
+				<option value="4">4 GB+</option>
+				<option value="8">8 GB+</option>
+			</select>
+		</div>
+
+		<!-- Sort Filter -->
+		<div class="filter-group">
+			<label for="sort-filter" class="filter-label">Sort By</label>
+			<select id="sort-filter" class="filter-select">
+				<option value="price-asc">Price: Low to High</option>
+				<option value="price-desc">Price: High to Low</option>
+				<option value="provider">Provider A-Z</option>
+				<option value="ram-desc">RAM: High to Low</option>
+				<option value="featured">Featured First</option>
+			</select>
+		</div>
+	</div>
+
+	<!-- Active Filters Display -->
+	<div id="active-filters" class="active-filters hidden">
+		<div class="active-filters-label">Active filters:</div>
+		<div id="filter-tags" class="filter-tags"></div>
+	</div>
+</div>
+
+<style>
+	.filters-container {
+		background: white;
+		border-radius: 0.75rem;
+		border: 1px solid #e5e7eb;
+		padding: 1.5rem;
+		margin-bottom: 1.5rem;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	}
+
+	.filters-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.5rem;
+	}
+
+	.filters-title {
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: #111827;
+	}
+
+	.reset-btn {
+		font-size: 0.875rem;
+		color: #6b7280;
+		background: none;
+		border: none;
+		cursor: pointer;
+		transition: color 0.2s ease;
+	}
+
+	.reset-btn:hover {
+		color: #111827;
+	}
+
+	.filters-grid {
+		display: grid;
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+		gap: 1.5rem;
+	}
+
+	.filter-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.filter-label {
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: #374151;
+	}
+
+	.filter-select {
+		width: 100%;
+		padding: 0.75rem;
+		border: 1px solid #d1d5db;
+		border-radius: 0.5rem;
+		background: white;
+		font-size: 0.875rem;
+		color: #374151;
+		transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.filter-select:focus {
+		outline: none;
+		border-color: #3b82f6;
+		box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+	}
+
+	.price-filter-container {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.price-slider {
+		width: 100%;
+		height: 6px;
+		border-radius: 3px;
+		background: #e5e7eb;
+		outline: none;
+		-webkit-appearance: none;
+		cursor: pointer;
+	}
+
+	.price-slider::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		appearance: none;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: #3b82f6;
+		cursor: pointer;
+		border: 2px solid white;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	.price-slider::-moz-range-thumb {
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: #3b82f6;
+		cursor: pointer;
+		border: 2px solid white;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	.price-range {
+		display: flex;
+		justify-content: space-between;
+		font-size: 0.75rem;
+		color: #6b7280;
+	}
+
+	.price-current {
+		font-weight: 600;
+		color: #3b82f6;
+	}
+
+	.active-filters {
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid #f3f4f6;
+	}
+
+	.active-filters.hidden {
+		display: none;
+	}
+
+	.active-filters-label {
+		font-size: 0.875rem;
+		color: #6b7280;
+		margin-bottom: 0.5rem;
+	}
+
+	.filter-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	@media (min-width: 768px) {
+		.filters-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.filters-grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const providerFilter = document.getElementById('provider-filter') as HTMLSelectElement;
+		const priceFilter = document.getElementById('price-filter') as HTMLInputElement;
+		const priceDisplay = document.getElementById('price-display') as HTMLSpanElement;
+		const ramFilter = document.getElementById('ram-filter') as HTMLSelectElement;
+		const sortFilter = document.getElementById('sort-filter') as HTMLSelectElement;
+		const resetButton = document.getElementById('reset-filters') as HTMLButtonElement;
+		const activeFiltersDiv = document.getElementById('active-filters') as HTMLDivElement;
+		const filterTagsDiv = document.getElementById('filter-tags') as HTMLDivElement;
+
+		// Get all VPS cards
+		const vpsCards = document.querySelectorAll('[data-vps-card]') as NodeListOf<HTMLElement>;
+
+		function updatePriceDisplay() {
+			if (priceDisplay) {
+				priceDisplay.textContent = `$${priceFilter.value}`;
+			}
+		}
+
+		function updateActiveFilters() {
+			const activeFilters: string[] = [];
+			
+			if (providerFilter.value) activeFilters.push(`Provider: ${providerFilter.value}`);
+			if (priceFilter.value !== priceFilter.max) activeFilters.push(`Max Price: $${priceFilter.value}`);
+			if (ramFilter.value) activeFilters.push(`Min RAM: ${ramFilter.value} GB`);
+			if (sortFilter.value !== 'price-asc') {
+				const sortLabels: Record<string, string> = {
+					'price-desc': 'Price: High to Low',
+					'provider': 'Provider A-Z',
+					'ram-desc': 'RAM: High to Low',
+					'featured': 'Featured First'
+				};
+				activeFilters.push(`Sort: ${sortLabels[sortFilter.value] || sortFilter.value}`);
+			}
+
+			if (activeFilters.length > 0) {
+				activeFiltersDiv.classList.remove('hidden');
+				filterTagsDiv.innerHTML = activeFilters.map(filter => 
+					`<span class="badge badge-info badge-sm">${filter}</span>`
+				).join('');
+			} else {
+				activeFiltersDiv.classList.add('hidden');
+			}
+		}
+
+		function filterAndSort() {
+			const providerValue = providerFilter.value.toLowerCase();
+			const maxPrice = parseFloat(priceFilter.value);
+			const minRam = ramFilter.value ? parseInt(ramFilter.value) : 0;
+			const sortValue = sortFilter.value;
+
+			// Filter cards
+			const visibleCards: HTMLElement[] = [];
+			
+			vpsCards.forEach((card) => {
+				const provider = card.dataset.provider?.toLowerCase() || '';
+				const price = parseFloat(card.dataset.price || '0');
+				const ram = parseInt(card.dataset.ram || '0');
+				const featured = card.dataset.featured === 'true';
+
+				const matchesProvider = !providerValue || provider.includes(providerValue);
+				const matchesPrice = price <= maxPrice;
+				const matchesRam = ram >= minRam;
+
+				if (matchesProvider && matchesPrice && matchesRam) {
+					card.style.display = '';
+					visibleCards.push(card);
+				} else {
+					card.style.display = 'none';
+				}
+			});
+
+			// Sort visible cards
+			const container = visibleCards[0]?.parentElement;
+			if (container) {
+				visibleCards.sort((a, b) => {
+					const aPrice = parseFloat(a.dataset.price || '0');
+					const bPrice = parseFloat(b.dataset.price || '0');
+					const aProvider = a.dataset.provider || '';
+					const bProvider = b.dataset.provider || '';
+					const aRam = parseInt(a.dataset.ram || '0');
+					const bRam = parseInt(b.dataset.ram || '0');
+					const aFeatured = a.dataset.featured === 'true';
+					const bFeatured = b.dataset.featured === 'true';
+
+					switch (sortValue) {
+						case 'price-asc':
+							return aPrice - bPrice;
+						case 'price-desc':
+							return bPrice - aPrice;
+						case 'provider':
+							return aProvider.localeCompare(bProvider);
+						case 'ram-desc':
+							return bRam - aRam;
+						case 'featured':
+							if (aFeatured && !bFeatured) return -1;
+							if (!aFeatured && bFeatured) return 1;
+							return aPrice - bPrice;
+						default:
+							return 0;
+					}
+				});
+
+				// Reorder DOM elements
+				visibleCards.forEach(card => container.appendChild(card));
+			}
+
+			updateActiveFilters();
+		}
+
+		function resetFilters() {
+			providerFilter.value = '';
+			priceFilter.value = priceFilter.max;
+			ramFilter.value = '';
+			sortFilter.value = 'price-asc';
+			updatePriceDisplay();
+			filterAndSort();
+		}
+
+		// Event listeners
+		priceFilter?.addEventListener('input', () => {
+			updatePriceDisplay();
+			filterAndSort();
+		});
+
+		providerFilter?.addEventListener('change', filterAndSort);
+		ramFilter?.addEventListener('change', filterAndSort);
+		sortFilter?.addEventListener('change', filterAndSort);
+		resetButton?.addEventListener('click', resetFilters);
+
+		// Initialize
+		updatePriceDisplay();
+		filterAndSort();
+	});
+</script>

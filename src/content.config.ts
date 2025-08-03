@@ -1,6 +1,8 @@
-import { z } from 'astro:content';
+import { defineCollection, z } from 'astro:content';
+import { file } from 'astro/loaders';
 
-export const VPSPlanSchema = z.object({
+// Define the VPS plan schema with comprehensive validation
+const vpsSchema = z.object({
 	id: z.string().min(1, 'ID is required'),
 	provider: z.string().min(1, 'Provider name is required'),
 	name: z.string().min(1, 'Plan name is required'),
@@ -21,15 +23,22 @@ export const VPSPlanSchema = z.object({
 	locations: z.array(z.string()).min(1, 'At least one location is required'),
 	uptime: z.string().regex(/^\d+(\.\d+)?%$/, 'Uptime must be in format "99.9%"'),
 	support: z.string().min(1, 'Support information is required'),
-	website: z.string().url('Website must be a valid URL')
-});
-
-export const VPSProviderSchema = z.object({
-	name: z.string().min(1, 'Provider name is required'),
-	logo: z.string().url('Logo must be a valid URL').optional(),
 	website: z.string().url('Website must be a valid URL'),
-	plans: z.array(VPSPlanSchema).min(1, 'Provider must have at least one plan')
+	// Optional fields for future extensibility
+	tags: z.array(z.string()).optional(),
+	description: z.string().optional(),
+	featured: z.boolean().default(false),
+	createdAt: z.coerce.date().optional(),
+	updatedAt: z.coerce.date().optional()
 });
 
-export type VPSPlan = z.infer<typeof VPSPlanSchema>;
-export type VPSProvider = z.infer<typeof VPSProviderSchema>;
+// Define collections
+const vpsPlans = defineCollection({
+	loader: file('src/data/vps-plans.json'),
+	schema: vpsSchema
+});
+
+// Export collections
+export const collections = {
+	vpsPlans
+};
