@@ -1,11 +1,82 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import VPSTable from '../components/VPSTable.astro';
+import VPSFilters from '../components/VPSFilters.astro';
+import { vpsPlans } from '../data/vps-plans.js';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const uniqueProviders = [...new Set(vpsPlans.map(plan => plan.provider))];
 ---
 
 <Layout>
-	<Welcome />
+	<main class="container">
+		<header class="hero">
+			<h1>VPS Compare</h1>
+			<p>Find the perfect VPS hosting solution for your needs. Compare prices, specifications, and features from top providers.</p>
+		</header>
+
+		<VPSFilters providers={uniqueProviders} />
+		<VPSTable plans={vpsPlans} />
+	</main>
 </Layout>
+
+<style>
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 2rem 1rem;
+		font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+	}
+
+	.hero {
+		text-align: center;
+		margin-bottom: 3rem;
+		padding: 2rem 0;
+	}
+
+	.hero h1 {
+		font-size: 3rem;
+		font-weight: 700;
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		margin: 0 0 1rem 0;
+	}
+
+	.hero p {
+		font-size: 1.25rem;
+		color: #6b7280;
+		max-width: 600px;
+		margin: 0 auto;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 768px) {
+		.container {
+			padding: 1rem 0.5rem;
+		}
+
+		.hero {
+			margin-bottom: 2rem;
+			padding: 1rem 0;
+		}
+
+		.hero h1 {
+			font-size: 2.5rem;
+		}
+
+		.hero p {
+			font-size: 1.1rem;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.hero h1 {
+			font-size: 2rem;
+		}
+
+		.hero p {
+			font-size: 1rem;
+		}
+	}
+</style>
