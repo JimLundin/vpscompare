@@ -3,23 +3,12 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import VPSGrid from '../components/vps/VPSGrid.astro';
 import VPSFilters from '../components/vps/VPSFilters.astro';
-import ErrorBoundary from '../components/layout/ErrorBoundary.astro';
 
-// Fetch VPS plans from content collection with error handling
-let vpsPlans;
-let error = null;
 
-try {
-	vpsPlans = await getCollection('vpsPlans');
-} catch (e) {
-	console.error('Failed to load VPS plans:', e);
-	error = e;
-	vpsPlans = [];
-}
+const vpsPlans = await getCollection('vpsPlans');
 
 // Add metadata for SEO
 const title = 'VPS Compare - Find the Best VPS Hosting';
-const description = 'Compare VPS hosting plans from top providers. Find the perfect balance of price, performance, and features for your needs.';
 ---
 
 <Layout title={title}>
@@ -62,13 +51,7 @@ const description = 'Compare VPS hosting plans from top providers. Find the perf
 		<!-- Main Content -->
 		<section class="content-section">
 			<div class="container">
-				{error ? (
-					<div class="error-container">
-						<ErrorBoundary 
-							fallback="Failed to load VPS plans. Please check your connection and try again."
-						/>
-					</div>
-				) : vpsPlans.length === 0 ? (
+				{vpsPlans.length === 0 ? (
 					<div class="empty-state">
 						<div class="empty-title">No VPS plans available</div>
 						<div class="empty-subtitle">Please check back later</div>

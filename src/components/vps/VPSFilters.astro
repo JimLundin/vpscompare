@@ -301,7 +301,6 @@ const maxPrice = Math.ceil(Math.max(...prices));
 				const provider = card.dataset.provider?.toLowerCase() || '';
 				const price = parseFloat(card.dataset.price || '0');
 				const ram = parseInt(card.dataset.ram || '0');
-				const featured = card.dataset.featured === 'true';
 
 				const matchesProvider = !providerValue || provider.includes(providerValue);
 				const matchesPrice = price <= maxPrice;
