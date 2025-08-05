@@ -18,17 +18,28 @@ const formatPrice = (price: number, currency: string) => {
 };
 
 // Format spec display
-const formatSpec = (spec: { amount: number; unit: string; type?: string; cores?: number; unlimited?: boolean }) => {
-	if ('cores' in spec) {
-		return `${spec.cores} ${spec.type || 'vCPU'}`;
+const formatSpec = (spec: 
+	| { amount: number; unit: string; type?: string; unlimited?: boolean }
+	| { cores: number; type: string }
+	| { amount?: number | undefined; unit: string; unlimited: boolean }
+) => {
+	// Handle CPU spec format
+	if ('cores' in spec && 'type' in spec) {
+		return `${spec.cores} ${spec.type}`;
 	}
-	if (spec.unlimited) {
+	// Handle unlimited bandwidth
+	if ('unlimited' in spec && spec.unlimited) {
 		return 'Unlimited';
 	}
-	if (spec.type) {
-		return `${spec.amount} ${spec.unit} ${spec.type}`;
+	// Handle regular specs with amount
+	if ('amount' in spec && spec.amount !== undefined) {
+		if ('type' in spec && spec.type) {
+			return `${spec.amount} ${spec.unit} ${spec.type}`;
+		}
+		return `${spec.amount} ${spec.unit}`;
 	}
-	return `${spec.amount} ${spec.unit}`;
+	// Fallback for specs without amount
+	return 'N/A';
 };
 
 const formatUptime = (uptime: { percentage: number; sla: boolean }) => {
