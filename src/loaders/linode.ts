@@ -103,7 +103,7 @@ export async function fetchLinodePlans() {
         return {
           id: `linode-${type.id}`,
           provider: 'Linode',
-          name: `${getTypeName(type.class)} ${type.label}`,
+          name: getTypeName(type.class),
           price: {
             monthly: type.price.monthly,
             currency: 'USD'
@@ -135,7 +135,7 @@ export async function fetchLinodePlans() {
             sla: true
           },
           support: '24/7 Support',
-          website: 'https://linode.com',
+          website: 'https://www.linode.com/pricing/',
           featured: ['g6-nanode-1', 'g6-standard-1', 'g6-standard-2'].includes(type.id),
           tags: (() => {
             const tags = ['reliable', 'developer-friendly'];
