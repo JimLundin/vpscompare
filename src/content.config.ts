@@ -1,5 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-import { fetchDigitalOceanPlans, fetchLinodePlans, fetchHetznerPlans } from './loaders';
+import { fetchDigitalOceanPlans, fetchLinodePlans, fetchHetznerPlans, fetchVultrPlans, fetchUpCloudPlans } from './loaders';
 
 // Define the VPS plan schema with comprehensive validation
 const vpsSchema = z.object({
@@ -56,23 +56,29 @@ const vpsPlans = defineCollection({
     console.log('🚀 Fetching VPS plans from providers...');
 
     // Fetch from all providers in parallel
-    const [digitalOceanPlans, hetznerPlans, linodePlans] = await Promise.all([
+    const [digitalOceanPlans, hetznerPlans, linodePlans, vultrPlans, upCloudPlans] = await Promise.all([
       fetchDigitalOceanPlans(),
       fetchHetznerPlans(),
-      fetchLinodePlans()
+      fetchLinodePlans(),
+      fetchVultrPlans(),
+      fetchUpCloudPlans()
     ]);
 
     // Combine all plans
     const allPlans = [
       ...digitalOceanPlans,
       ...hetznerPlans,
-      ...linodePlans
+      ...linodePlans,
+      ...vultrPlans,
+      ...upCloudPlans
     ];
 
     console.log(`✅ Fetched ${allPlans.length} VPS plans total`);
     console.log(`   - DigitalOcean: ${digitalOceanPlans.length} plans`);
     console.log(`   - Hetzner: ${hetznerPlans.length} plans`);
     console.log(`   - Linode: ${linodePlans.length} plans`);
+    console.log(`   - Vultr: ${vultrPlans.length} plans`);
+    console.log(`   - UpCloud: ${upCloudPlans.length} plans`);
 
     return allPlans;
   },
