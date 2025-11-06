@@ -135,7 +135,7 @@ describe('Linode Loader', () => {
       const result = await fetchLinodePlans();
 
       expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('linode-g6-standard-1');
+      expect(result[0]!.id).toBe('linode-g6-standard-1');
     });
 
     it('should filter out accelerated plans', async () => {
@@ -181,7 +181,7 @@ describe('Linode Loader', () => {
       const result = await fetchLinodePlans();
 
       expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('linode-g6-standard-1');
+      expect(result[0]!.id).toBe('linode-g6-standard-1');
     });
   });
 
@@ -258,11 +258,11 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].name).toBe('Nanode');
-      expect(result[1].name).toBe('Standard');
-      expect(result[2].name).toBe('Dedicated CPU');
-      expect(result[3].name).toBe('High Memory');
-      expect(result[4].name).toBe('Premium');
+      expect(result[0]!.name).toBe('Nanode');
+      expect(result[1]!.name).toBe('Standard');
+      expect(result[2]!.name).toBe('Dedicated CPU');
+      expect(result[3]!.name).toBe('High Memory');
+      expect(result[4]!.name).toBe('Premium');
     });
   });
 
@@ -299,7 +299,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].specs.cpu.type).toBe('CPU');
+      expect(result[0]!.specs.cpu.type).toBe('CPU');
     });
 
     it('should set CPU type to vCPU for shared plans', async () => {
@@ -334,7 +334,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].specs.cpu.type).toBe('vCPU');
+      expect(result[0]!.specs.cpu.type).toBe('vCPU');
     });
   });
 
@@ -371,7 +371,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].specs.ram).toEqual({ amount: 2, unit: 'GB' });
+      expect(result[0]!.specs.ram).toEqual({ amount: 2, unit: 'GB' });
     });
 
     it('should keep memory in MB when < 1024MB', async () => {
@@ -406,7 +406,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].specs.ram).toEqual({ amount: 512, unit: 'MB' });
+      expect(result[0]!.specs.ram).toEqual({ amount: 512, unit: 'MB' });
     });
 
     it('should convert disk from MB to GB when >= 1024MB', async () => {
@@ -441,7 +441,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].specs.storage).toEqual({ amount: 50, unit: 'GB', type: 'SSD' });
+      expect(result[0]!.specs.storage).toEqual({ amount: 50, unit: 'GB', type: 'SSD' });
     });
 
     it('should convert transfer from GB to TB when >= 1024GB', async () => {
@@ -476,7 +476,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].specs.bandwidth).toEqual({
+      expect(result[0]!.specs.bandwidth).toEqual({
         amount: 5000 / 1024, // 5000 GB converted to TB
         unit: 'TB',
         unlimited: false
@@ -517,7 +517,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].features).toContain('Shared CPU');
+      expect(result[0]!.features).toContain('Shared CPU');
     });
 
     it('should include correct features for standard plans', async () => {
@@ -552,8 +552,8 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].features).toContain('Burstable Performance');
-      expect(result[0].features).toContain('Shared CPU');
+      expect(result[0]!.features).toContain('Burstable Performance');
+      expect(result[0]!.features).toContain('Shared CPU');
     });
 
     it('should include correct features for dedicated plans', async () => {
@@ -588,8 +588,8 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].features).toContain('Dedicated CPU');
-      expect(result[0].features).toContain('Sustained Performance');
+      expect(result[0]!.features).toContain('Dedicated CPU');
+      expect(result[0]!.features).toContain('Sustained Performance');
     });
 
     it('should include correct features for highmem plans', async () => {
@@ -624,8 +624,8 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].features).toContain('High Memory');
-      expect(result[0].features).toContain('Optimized for Memory-Intensive Applications');
+      expect(result[0]!.features).toContain('High Memory');
+      expect(result[0]!.features).toContain('Optimized for Memory-Intensive Applications');
     });
 
     it('should include correct features for premium plans', async () => {
@@ -660,9 +660,9 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].features).toContain('Premium Hardware');
-      expect(result[0].features).toContain('Enhanced Performance');
-      expect(result[0].features).toContain('Advanced Networking');
+      expect(result[0]!.features).toContain('Premium Hardware');
+      expect(result[0]!.features).toContain('Enhanced Performance');
+      expect(result[0]!.features).toContain('Advanced Networking');
     });
   });
 
@@ -699,7 +699,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].tags).toContain('budget');
+      expect(result[0]!.tags).toContain('budget');
     });
 
     it('should add high-performance and dedicated tags for dedicated plans', async () => {
@@ -734,8 +734,8 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].tags).toContain('high-performance');
-      expect(result[0].tags).toContain('dedicated');
+      expect(result[0]!.tags).toContain('high-performance');
+      expect(result[0]!.tags).toContain('dedicated');
     });
 
     it('should add entry-level tag for nanode plans', async () => {
@@ -770,7 +770,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].tags).toContain('entry-level');
+      expect(result[0]!.tags).toContain('entry-level');
     });
   });
 
@@ -811,8 +811,8 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].locations).toEqual(['Newark, NJ', 'London, UK']);
-      expect(result[0].locations).not.toContain('Tokyo, JP');
+      expect(result[0]!.locations).toEqual(['Newark, NJ', 'London, UK']);
+      expect(result[0]!.locations).not.toContain('Tokyo, JP');
     });
 
     it('should limit regions to 10 maximum', async () => {
@@ -850,7 +850,7 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].locations).toHaveLength(10);
+      expect(result[0]!.locations).toHaveLength(10);
     });
   });
 
@@ -917,10 +917,10 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].featured).toBe(true); // g6-nanode-1
-      expect(result[1].featured).toBe(true); // g6-standard-1
-      expect(result[2].featured).toBe(true); // g6-standard-2
-      expect(result[3].featured).toBe(false); // g6-standard-4
+      expect(result[0]!.featured).toBe(true); // g6-nanode-1
+      expect(result[1]!.featured).toBe(true); // g6-standard-1
+      expect(result[2]!.featured).toBe(true); // g6-standard-2
+      expect(result[3]!.featured).toBe(false); // g6-standard-4
     });
   });
 
@@ -957,11 +957,11 @@ describe('Linode Loader', () => {
 
       const result = await fetchLinodePlans();
 
-      expect(result[0].uptime).toEqual({
+      expect(result[0]!.uptime).toEqual({
         percentage: 99.9,
         sla: true
       });
-      expect(result[0].support).toBe('24/7 Support');
+      expect(result[0]!.support).toBe('24/7 Support');
     });
   });
 

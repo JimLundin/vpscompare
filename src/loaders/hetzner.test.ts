@@ -162,7 +162,7 @@ describe('Hetzner Loader', () => {
       const result = await fetchHetznerPlans();
 
       expect(result).toHaveLength(1);
-      expect(result[0].name).toBe('cx11');
+      expect(result[0]!.name).toBe('cx11');
     });
 
     it('should filter out ARM servers by default', async () => {
@@ -213,7 +213,7 @@ describe('Hetzner Loader', () => {
       const result = await fetchHetznerPlans();
 
       expect(result).toHaveLength(1);
-      expect(result[0].name).toBe('cx11');
+      expect(result[0]!.name).toBe('cx11');
     });
 
     it('should include ARM servers when HETZNER_INCLUDE_ARM is true', async () => {
@@ -308,7 +308,7 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].price.monthly).toBe(4.15);
+      expect(result[0]!.price.monthly).toBe(4.15);
     });
 
     it('should use EUR currency', async () => {
@@ -346,7 +346,7 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].price.currency).toBe('EUR');
+      expect(result[0]!.price.currency).toBe('EUR');
     });
   });
 
@@ -386,7 +386,7 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].specs.cpu.type).toBe('vCPU');
+      expect(result[0]!.specs.cpu.type).toBe('vCPU');
     });
 
     it('should set CPU type to CPU for dedicated CPUs', async () => {
@@ -424,7 +424,7 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].specs.cpu.type).toBe('CPU');
+      expect(result[0]!.specs.cpu.type).toBe('CPU');
     });
   });
 
@@ -464,7 +464,7 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].specs.storage.type).toBe('SSD');
+      expect(result[0]!.specs.storage.type).toBe('SSD');
     });
 
     it('should set storage type to NVMe for non-local storage', async () => {
@@ -502,7 +502,7 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].specs.storage.type).toBe('NVMe');
+      expect(result[0]!.specs.storage.type).toBe('NVMe');
     });
   });
 
@@ -543,8 +543,8 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].tags).toContain('arm');
-      expect(result[0].tags).toContain('energy-efficient');
+      expect(result[0]!.tags).toContain('arm');
+      expect(result[0]!.tags).toContain('energy-efficient');
     });
 
     it('should add ultra-budget tag for very cheap plans', async () => {
@@ -582,7 +582,7 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].tags).toContain('ultra-budget');
+      expect(result[0]!.tags).toContain('ultra-budget');
     });
 
     it('should add high-performance tag for 4+ cores', async () => {
@@ -620,8 +620,8 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].tags).toContain('high-performance');
-      expect(result[0].tags).toContain('high-memory');
+      expect(result[0]!.tags).toContain('high-performance');
+      expect(result[0]!.tags).toContain('high-memory');
     });
 
     it('should include all required features', async () => {
@@ -659,7 +659,7 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].features).toEqual([
+      expect(result[0]!.features).toEqual([
         'SSD Storage',
         'IPv6',
         'Private Networking',
@@ -712,7 +712,7 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].locations).toEqual([
+      expect(result[0]!.locations).toEqual([
         'Falkenstein, Germany',
         'Helsinki, Finland',
         'Ashburn, USA'
@@ -778,9 +778,9 @@ describe('Hetzner Loader', () => {
 
       const result = await fetchHetznerPlans();
 
-      expect(result[0].featured).toBe(true);
-      expect(result[1].featured).toBe(true);
-      expect(result[2].featured).toBe(false);
+      expect(result[0]!.featured).toBe(true);
+      expect(result[1]!.featured).toBe(true);
+      expect(result[2]!.featured).toBe(false);
     });
   });
 
