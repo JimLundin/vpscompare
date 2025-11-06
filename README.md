@@ -52,6 +52,10 @@ A modern VPS hosting comparison website built with Astro 5.0+ using the latest c
 | `npm run dev`             | Starts local dev server at `localhost:4321`     |
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
+| `npm test`                | Run tests in watch mode                          |
+| `npm run test:run`        | Run tests once (CI mode)                         |
+| `npm run test:ui`         | Run tests with interactive UI                    |
+| `npm run test:coverage`   | Run tests with coverage report                   |
 
 ## 🎯 Key Technologies
 
@@ -60,6 +64,13 @@ A modern VPS hosting comparison website built with Astro 5.0+ using the latest c
 - **Zod** - Runtime schema validation (via `astro:content`)
 - **Vanilla CSS** - No framework dependencies, custom design system
 - **Content Collections** - Type-safe data management with built-in loaders
+- **Vitest** - Fast unit testing with TypeScript support
+
+## 🧪 Testing & CI/CD
+
+- **56 tests** across provider loaders with Vitest
+- GitHub Actions: CI, deployment, scheduled API checks, Dependabot
+- See [TEST_DOCUMENTATION.md](TEST_DOCUMENTATION.md) for details
 
 ## 📊 Data Management
 

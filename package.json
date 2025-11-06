@@ -6,11 +6,20 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "astro": "^5.12.8",
     "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "@vitest/ui": "^4.0.7",
+    "happy-dom": "^20.0.10",
+    "vitest": "^4.0.7"
   }
 }
