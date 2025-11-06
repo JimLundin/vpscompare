@@ -154,7 +154,7 @@ describe('DigitalOcean Loader', () => {
       const result = await fetchDigitalOceanPlans();
 
       expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('digitalocean-s-1vcpu-1gb');
+      expect(result[0]!.id).toBe('digitalocean-s-1vcpu-1gb');
     });
 
     it('should filter out sizes with memory less than 512MB', async () => {
@@ -202,7 +202,7 @@ describe('DigitalOcean Loader', () => {
       const result = await fetchDigitalOceanPlans();
 
       expect(result).toHaveLength(1);
-      expect(result[0].specs.ram.amount).toBeGreaterThanOrEqual(0.5);
+      expect(result[0]!.specs.ram.amount).toBeGreaterThanOrEqual(0.5);
     });
   });
 
@@ -251,8 +251,8 @@ describe('DigitalOcean Loader', () => {
 
       const result = await fetchDigitalOceanPlans();
 
-      expect(result[0].specs.ram).toEqual({ amount: 512, unit: 'MB' });
-      expect(result[1].specs.ram).toEqual({ amount: 1, unit: 'GB' });
+      expect(result[0]!.specs.ram).toEqual({ amount: 512, unit: 'MB' });
+      expect(result[1]!.specs.ram).toEqual({ amount: 1, unit: 'GB' });
     });
 
     it('should include all required features', async () => {
@@ -289,7 +289,7 @@ describe('DigitalOcean Loader', () => {
 
       const result = await fetchDigitalOceanPlans();
 
-      expect(result[0].features).toEqual([
+      expect(result[0]!.features).toEqual([
         'SSD Storage',
         'IPv6',
         'Monitoring',
@@ -345,9 +345,9 @@ describe('DigitalOcean Loader', () => {
 
       const result = await fetchDigitalOceanPlans();
 
-      expect(result[0].tags).toContain('budget');
-      expect(result[1].tags).toContain('high-performance');
-      expect(result[1].tags).toContain('high-memory');
+      expect(result[0]!.tags).toContain('budget');
+      expect(result[1]!.tags).toContain('high-performance');
+      expect(result[1]!.tags).toContain('high-memory');
     });
 
     it('should mark featured plans correctly', async () => {
@@ -404,9 +404,9 @@ describe('DigitalOcean Loader', () => {
 
       const result = await fetchDigitalOceanPlans();
 
-      expect(result[0].featured).toBe(true);
-      expect(result[1].featured).toBe(true);
-      expect(result[2].featured).toBe(false);
+      expect(result[0]!.featured).toBe(true);
+      expect(result[1]!.featured).toBe(true);
+      expect(result[2]!.featured).toBe(false);
     });
   });
 
@@ -481,8 +481,8 @@ describe('DigitalOcean Loader', () => {
 
       const result = await fetchDigitalOceanPlans();
 
-      expect(result[0].locations).toEqual(['New York 1', 'San Francisco 1']);
-      expect(result[0].locations).not.toContain('Unavailable Region');
+      expect(result[0]!.locations).toEqual(['New York 1', 'San Francisco 1']);
+      expect(result[0]!.locations).not.toContain('Unavailable Region');
     });
 
     it('should limit regions to 10 maximum', async () => {
@@ -524,7 +524,7 @@ describe('DigitalOcean Loader', () => {
 
       const result = await fetchDigitalOceanPlans();
 
-      expect(result[0].locations).toHaveLength(10);
+      expect(result[0]!.locations).toHaveLength(10);
     });
   });
 
@@ -563,7 +563,7 @@ describe('DigitalOcean Loader', () => {
 
       const result = await fetchDigitalOceanPlans();
 
-      expect(result[0].price).toEqual({
+      expect(result[0]!.price).toEqual({
         monthly: 6.0,
         currency: 'USD'
       });
