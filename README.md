@@ -52,6 +52,10 @@ A modern VPS hosting comparison website built with Astro 5.0+ using the latest c
 | `npm run dev`             | Starts local dev server at `localhost:4321`     |
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
+| `npm test`                | Run tests in watch mode                          |
+| `npm run test:run`        | Run tests once (CI mode)                         |
+| `npm run test:ui`         | Run tests with interactive UI                    |
+| `npm run test:coverage`   | Run tests with coverage report                   |
 
 ## 🎯 Key Technologies
 
@@ -60,6 +64,36 @@ A modern VPS hosting comparison website built with Astro 5.0+ using the latest c
 - **Zod** - Runtime schema validation (via `astro:content`)
 - **Vanilla CSS** - No framework dependencies, custom design system
 - **Content Collections** - Type-safe data management with built-in loaders
+- **Vitest** - Fast unit testing with TypeScript support
+
+## 🧪 Testing
+
+The project includes comprehensive test coverage for all VPS provider loaders:
+
+- **56 total tests** across 3 provider loaders
+- **DigitalOcean** (13 tests) - API validation, data transformation, filtering
+- **Hetzner** (19 tests) - Pricing calculation, ARM support, type detection
+- **Linode** (24 tests) - Plan mapping, unit conversions, feature detection
+
+All tests mock API calls to ensure fast, reliable execution without network dependencies.
+
+See [TEST_DOCUMENTATION.md](TEST_DOCUMENTATION.md) for detailed testing guide.
+
+## 🔄 CI/CD
+
+Automated workflows via GitHub Actions:
+
+- **CI Workflow** - Runs tests and type checking on all PRs and branches
+- **Deploy Workflow** - Tests → Build → Deploy to GitHub Pages on main branch
+- **Scheduled Tests** - Daily API health checks at 6 AM UTC
+- **Dependabot** - Automated dependency updates weekly
+
+See [.github/WORKFLOWS.md](.github/WORKFLOWS.md) for complete workflow documentation.
+
+### Status Badges
+
+![CI Status](https://github.com/JimLundin/vpscompare/workflows/CI/badge.svg)
+![Deploy Status](https://github.com/JimLundin/vpscompare/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)
 
 ## 📊 Data Management
 
