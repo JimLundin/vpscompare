@@ -29,15 +29,6 @@ interface ScalewayServersResponse {
   };
 }
 
-interface ScalewayZone {
-  id: string;
-  name: string;
-}
-
-interface ScalewayZonesResponse {
-  zones: ScalewayZone[];
-}
-
 /**
  * Fetches VPS plans from Scaleway API
  * Requires SCALEWAY_API_KEY environment variable (secret key)

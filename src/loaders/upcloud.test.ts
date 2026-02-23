@@ -216,7 +216,7 @@ describe('UpCloud Loader', () => {
 
       const result = await fetchUpCloudPlans();
 
-      expect(result[0].specs.ram.amount).toBe(4);
+      expect(result[0]!.specs.ram.amount).toBe(4);
     });
 
     it('should correctly calculate monthly price from hourly', async () => {
@@ -274,7 +274,7 @@ describe('UpCloud Loader', () => {
 
       const result = await fetchUpCloudPlans();
 
-      expect(result[0].price.monthly).toBe(7.3);
+      expect(result[0]!.price.monthly).toBe(7.3);
     });
 
     it('should correctly identify storage type based on tier', async () => {
@@ -332,7 +332,7 @@ describe('UpCloud Loader', () => {
 
       const result = await fetchUpCloudPlans();
 
-      expect(result[0].specs.storage.type).toBe('NVMe');
+      expect(result[0]!.specs.storage.type).toBe('NVMe');
     });
   });
 });

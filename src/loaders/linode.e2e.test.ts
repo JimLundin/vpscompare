@@ -104,8 +104,9 @@ describe('Linode E2E Tests', () => {
 
       for (const plan of plans) {
         // Extract class from plan name or ID
+        const planAny = plan as Record<string, unknown>;
         const hasValidClass = validClasses.some(className =>
-          plan.name.includes(className) || plan.description?.includes(className)
+          plan.name.includes(className) || (typeof planAny.description === 'string' && planAny.description.includes(className))
         );
 
         // At least some plans should have recognizable class names
@@ -371,7 +372,7 @@ describe('Linode E2E Tests', () => {
       }
 
       // Each class should have multiple sizes
-      for (const [planClass, classPlans] of plansByClass) {
+      for (const [_planClass, classPlans] of plansByClass) {
         if (classPlans.length > 1) {
           // Verify specs increase with price
           const sorted = [...classPlans].sort((a, b) => a.price.monthly - b.price.monthly);

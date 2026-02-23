@@ -106,8 +106,9 @@ export async function fetchUpCloudPlans() {
       const ramInGB = plan.memory_amount / 1024;
 
       // Get pricing from first available zone (pricing may vary by zone)
-      const firstZone = Object.keys(pricingData.prices.zone)[0];
-      const planPricing = pricingData.prices.zone[firstZone]?.[`server_plan_${plan.name}`];
+      const zoneKeys = Object.keys(pricingData.prices.zone);
+      const firstZone = zoneKeys[0];
+      const planPricing = firstZone ? pricingData.prices.zone[firstZone]?.[`server_plan_${plan.name}`] : undefined;
 
       // Calculate monthly price from hourly (hourly * 730 hours/month)
       const hourlyPrice = planPricing ? parseFloat(planPricing.price) : 0;

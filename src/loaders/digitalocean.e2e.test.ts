@@ -126,9 +126,10 @@ describe('DigitalOcean E2E Tests', () => {
         expect(plan.price.monthly).toBeGreaterThan(0);
 
         // If yearly price exists, it should be less per month than monthly
-        if (plan.price.yearly) {
-          const yearlyMonthly = plan.price.yearly / 12;
-          expect(yearlyMonthly).toBeLessThan(plan.price.monthly);
+        const price = plan.price as { monthly: number; yearly?: number; currency: string };
+        if (price.yearly) {
+          const yearlyMonthly = price.yearly / 12;
+          expect(yearlyMonthly).toBeLessThan(price.monthly);
         }
 
         // Currency should be USD
