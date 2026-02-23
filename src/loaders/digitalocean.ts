@@ -39,14 +39,19 @@ export async function fetchDigitalOceanPlans() {
       'Content-Type': 'application/json'
     };
 
-    // Fetch sizes and regions
+    // Fetch sizes (paginated, max 200 per page) and regions in parallel
     const [sizesResponse, regionsResponse] = await Promise.all([
-      fetch('https://api.digitalocean.com/v2/sizes', { headers }),
-      fetch('https://api.digitalocean.com/v2/regions', { headers })
+      fetch('https://api.digitalocean.com/v2/sizes?per_page=200', { headers }),
+      fetch('https://api.digitalocean.com/v2/regions?per_page=200', { headers })
     ]);
 
-    if (!sizesResponse.ok || !regionsResponse.ok) {
-      throw new Error('Failed to fetch DigitalOcean data');
+    if (!sizesResponse.ok) {
+      const body = await sizesResponse.text().catch(() => '');
+      throw new Error(`DigitalOcean sizes API error ${sizesResponse.status}: ${body.slice(0, 200)}`);
+    }
+    if (!regionsResponse.ok) {
+      const body = await regionsResponse.text().catch(() => '');
+      throw new Error(`DigitalOcean regions API error ${regionsResponse.status}: ${body.slice(0, 200)}`);
     }
 
     const [sizesData, regionsData] = await Promise.all([
