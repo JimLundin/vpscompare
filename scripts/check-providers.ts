@@ -4,37 +4,15 @@
  * Tests each VPS provider's API to verify credentials and connectivity.
  *
  * Usage:
- *   npx tsx scripts/check-providers.ts
  *   npm run check:providers
  *
- * Set API keys in .env (copy from .env.example) before running.
+ * API keys are read from environment variables.
+ * In CI, these come from GitHub Actions secrets.
+ *
+ * Required GitHub secrets:
+ *   DIGITALOCEAN_API_KEY, HETZNER_API_KEY, VULTR_API_KEY,
+ *   UPCLOUD_USERNAME, UPCLOUD_PASSWORD, SCALEWAY_API_KEY
  */
-
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
-
-// Load .env file manually (no extra deps needed)
-function loadEnv() {
-  try {
-    const envPath = resolve(process.cwd(), '.env');
-    const content = readFileSync(envPath, 'utf-8');
-    for (const line of content.split('\n')) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith('#')) continue;
-      const eqIndex = trimmed.indexOf('=');
-      if (eqIndex === -1) continue;
-      const key = trimmed.slice(0, eqIndex).trim();
-      const value = trimmed.slice(eqIndex + 1).trim();
-      if (!process.env[key]) {
-        process.env[key] = value;
-      }
-    }
-  } catch {
-    // .env file doesn't exist, rely on environment variables
-  }
-}
-
-loadEnv();
 
 interface ProviderCheck {
   name: string;
@@ -172,8 +150,8 @@ async function main() {
   if (allOk) {
     console.log('All providers connected successfully!');
   } else {
-    console.log('Some providers failed. Check your .env file.');
-    console.log('Copy .env.example to .env and fill in your API keys.');
+    console.log('Some providers failed. Ensure the required environment variables are set.');
+    console.log('In GitHub Actions, add them as repository secrets.');
   }
 
   process.exit(allOk ? 0 : 1);
