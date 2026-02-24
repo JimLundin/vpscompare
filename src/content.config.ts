@@ -1,5 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-import { fetchDigitalOceanPlans, fetchLinodePlans, fetchHetznerPlans, fetchVultrPlans, fetchUpCloudPlans, fetchScalewayPlans } from './loaders';
+import { fetchDigitalOceanPlans, fetchLinodePlans, fetchHetznerPlans, fetchVultrPlans, fetchUpCloudPlans, fetchScalewayPlans, fetchOVHcloudPlans, fetchContaboPlans, fetchOracleCloudPlans, fetchKamateraPlans } from './loaders';
 
 // Define the VPS plan schema with comprehensive validation
 const vpsSchema = z.object({
@@ -56,13 +56,17 @@ const vpsPlans = defineCollection({
     console.log('🚀 Fetching VPS plans from providers...');
 
     // Fetch from all providers in parallel
-    const [digitalOceanPlans, hetznerPlans, linodePlans, vultrPlans, upCloudPlans, scalewayPlans] = await Promise.all([
+    const [digitalOceanPlans, hetznerPlans, linodePlans, vultrPlans, upCloudPlans, scalewayPlans, ovhcloudPlans, contaboPlans, oracleCloudPlans, kamateraPlans] = await Promise.all([
       fetchDigitalOceanPlans(),
       fetchHetznerPlans(),
       fetchLinodePlans(),
       fetchVultrPlans(),
       fetchUpCloudPlans(),
-      fetchScalewayPlans()
+      fetchScalewayPlans(),
+      fetchOVHcloudPlans(),
+      fetchContaboPlans(),
+      fetchOracleCloudPlans(),
+      fetchKamateraPlans()
     ]);
 
     // Combine all plans
@@ -72,7 +76,11 @@ const vpsPlans = defineCollection({
       ...linodePlans,
       ...vultrPlans,
       ...upCloudPlans,
-      ...scalewayPlans
+      ...scalewayPlans,
+      ...ovhcloudPlans,
+      ...contaboPlans,
+      ...oracleCloudPlans,
+      ...kamateraPlans
     ];
 
     console.log(`✅ Fetched ${allPlans.length} VPS plans total`);
@@ -82,6 +90,10 @@ const vpsPlans = defineCollection({
     console.log(`   - Vultr: ${vultrPlans.length} plans`);
     console.log(`   - UpCloud: ${upCloudPlans.length} plans`);
     console.log(`   - Scaleway: ${scalewayPlans.length} plans`);
+    console.log(`   - OVHcloud: ${ovhcloudPlans.length} plans`);
+    console.log(`   - Contabo: ${contaboPlans.length} plans`);
+    console.log(`   - Oracle Cloud: ${oracleCloudPlans.length} plans`);
+    console.log(`   - Kamatera: ${kamateraPlans.length} plans`);
 
     return allPlans;
   },

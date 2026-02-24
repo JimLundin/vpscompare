@@ -4,3 +4,7 @@ export { fetchHetznerPlans } from './hetzner';
 export { fetchVultrPlans } from './vultr';
 export { fetchUpCloudPlans } from './upcloud';
 export { fetchScalewayPlans } from './scaleway';
+export { fetchOVHcloudPlans } from './ovhcloud';
+export { fetchContaboPlans } from './contabo';
+export { fetchOracleCloudPlans } from './oraclecloud';
+export { fetchKamateraPlans } from './kamatera';

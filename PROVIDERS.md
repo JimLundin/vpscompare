@@ -2,7 +2,7 @@
 
 This document tracks all VPS providers supported by this comparison site, their integration status, and notes on implementation.
 
-## Currently Supported Providers (6)
+## Currently Supported Providers (10)
 
 ### 1. DigitalOcean ✅
 - **API**: DigitalOcean API v2
@@ -91,6 +91,66 @@ This document tracks all VPS providers supported by this comparison site, their 
   - `/instance/v1/zones/{zone}/products/servers` - Server types
 - **Implementation**: `src/loaders/scaleway.ts`
 
+### 7. OVHcloud ✅
+- **API**: OVHcloud Public Catalog API
+- **Authentication**: None required (public catalog endpoint)
+- **Pricing Currency**: EUR (configurable via OVH_SUBSIDIARY)
+- **Features**:
+  - Major European cloud provider
+  - Anti-DDoS protection included
+  - Global datacenter coverage (Europe, Canada, Asia-Pacific)
+  - SLA guarantee
+  - 99.9% uptime SLA
+- **API Endpoints**:
+  - `/v1/order/catalog/public/vps` - Public VPS catalog (no auth required)
+- **Implementation**: `src/loaders/ovhcloud.ts`
+
+### 8. Contabo ✅
+- **API**: Contabo API v1 (OAuth2) + Static Plans
+- **Authentication**: OAuth2 (client credentials + password grant) - optional
+- **Pricing Currency**: EUR
+- **Features**:
+  - Budget-friendly European provider
+  - NVMe storage on all plans
+  - Unlimited traffic (32TB fair use)
+  - DDoS protection included
+  - Global datacenter coverage (Germany, USA, Singapore, Japan, Australia, UK)
+- **API Endpoints**:
+  - `https://auth.contabo.com/auth/realms/contabo/protocol/openid-connect/token` - OAuth2 token
+  - Static plans used (Contabo API is management-only, no public plans endpoint)
+- **Implementation**: `src/loaders/contabo.ts`
+
+### 9. Oracle Cloud Infrastructure ✅
+- **API**: Oracle Cloud Public Pricing API
+- **Authentication**: None required (public pricing endpoint)
+- **Pricing Currency**: USD (configurable via ORACLE_CURRENCY)
+- **Features**:
+  - Always Free Tier available
+  - Flexible compute shapes (VM.Standard, VM.Optimized)
+  - ARM (Ampere A1) and x86 options
+  - NVMe storage
+  - Enterprise-grade security
+  - 99.99% uptime SLA
+- **API Endpoints**:
+  - `https://apexapps.oracle.com/pls/apex/cetools/api/v1/products/` - Public pricing (no auth required)
+- **Implementation**: `src/loaders/oraclecloud.ts`
+
+### 10. Kamatera ✅
+- **API**: Kamatera Cloud API + Static Plans
+- **Authentication**: ClientID + Secret (optional)
+- **Pricing Currency**: USD
+- **Features**:
+  - Build-your-own cloud VPS
+  - Multiple CPU types (Type A shared, Type B dedicated)
+  - Global datacenter coverage (USA, Canada, Europe, Asia, Israel)
+  - SSD storage
+  - 99.95% uptime SLA
+- **API Endpoints**:
+  - `https://console.kamatera.com/service/authenticate` - Authentication
+  - `https://console.kamatera.com/service/server` - Server options
+  - Static plans used (API provides component-based pricing, not pre-configured plans)
+- **Implementation**: `src/loaders/kamatera.ts`
+
 ## Providers Under Investigation
 
 ### High Priority (Management APIs Available)
@@ -143,28 +203,19 @@ These providers require more complex authentication mechanisms:
 - **Complexity**: Requires Google Cloud authentication and project setup
 - **Note**: Pricing can be queried via Cloud Billing API
 
-#### Oracle Cloud Infrastructure
-- **Status**: Complex authentication (API Key + Request Signing)
-- **API**: OCI Compute API
-- **Complexity**: Requires request signing with private key
-- **Pricing API**: https://apexapps.oracle.com/pls/apex/cetools/api/v1/products/
-- **Note**: Free tier available, public pricing API exists
+#### Oracle Cloud Infrastructure ✅ (Now Supported)
+- **Status**: Integrated using public pricing API
+- **See**: Provider #9 above
 
 ### Budget/Low-End Providers
 
-#### Contabo
-- **Status**: OAuth2 authentication required
-- **API**: Contabo API v1
-- **Documentation**: https://api.contabo.com/
-- **Complexity**: Requires OAuth2 client credentials
-- **Note**: Requires client ID, client secret, username, and password
+#### Contabo ✅ (Now Supported)
+- **Status**: Integrated using static plans + optional OAuth2 API
+- **See**: Provider #8 above
 
-#### OVHcloud
-- **Status**: Complex authentication (Application Key + Consumer Key)
-- **API**: OVHcloud API
-- **Documentation**: https://api.us.ovhcloud.com/
-- **Complexity**: Requires application registration and consumer key generation
-- **Note**: Supports VPS, but authentication is multi-step
+#### OVHcloud ✅ (Now Supported)
+- **Status**: Integrated using public catalog API (no auth required)
+- **See**: Provider #7 above
 
 ## Implementation Patterns
 
@@ -187,7 +238,7 @@ headers: {
 ```
 
 ### Pattern 3: Public Endpoints (No Auth)
-**Examples**: Linode
+**Examples**: Linode, OVHcloud (catalog), Oracle Cloud (pricing)
 
 ```typescript
 // No authentication required
@@ -195,14 +246,30 @@ fetch('https://api.linode.com/v4/linode/types')
 ```
 
 ### Pattern 4: OAuth2 (Complex)
-**Examples**: Contabo, Google Cloud, Azure
+**Examples**: Contabo (optional), Google Cloud, Azure
 
 Requires:
 1. Application registration
 2. Token endpoint
 3. Access token refresh logic
 
-### Pattern 5: AWS Signature V4 (Most Complex)
+### Pattern 5: ClientID + Secret Headers
+**Examples**: Kamatera
+
+```typescript
+headers: {
+  'AuthClientId': clientId,
+  'AuthSecret': secret
+}
+```
+
+### Pattern 6: Static Plans with Optional API
+**Examples**: Contabo, Kamatera
+
+When a provider's API doesn't expose a plans/pricing endpoint (only management APIs),
+static plan data is used as a fallback, validated against published pricing pages.
+
+### Pattern 7: AWS Signature V4 (Most Complex)
 **Examples**: AWS Lightsail
 
 Requires:
@@ -254,5 +321,5 @@ To suggest a new provider:
 
 ---
 
-**Last Updated**: 2025-01-07
-**Total Providers**: 6 active, 10+ under investigation
+**Last Updated**: 2026-02-24
+**Total Providers**: 10 active, 6+ under investigation
