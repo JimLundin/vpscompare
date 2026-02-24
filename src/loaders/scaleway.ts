@@ -29,15 +29,6 @@ interface ScalewayServersResponse {
   };
 }
 
-interface ScalewayZone {
-  id: string;
-  name: string;
-}
-
-interface ScalewayZonesResponse {
-  zones: ScalewayZone[];
-}
-
 /**
  * Fetches VPS plans from Scaleway API
  * Requires SCALEWAY_API_KEY environment variable (secret key)
@@ -64,7 +55,8 @@ export async function fetchScalewayPlans() {
     ]);
 
     if (!serversResponse.ok) {
-      throw new Error(`Failed to fetch Scaleway servers: ${serversResponse.status} ${serversResponse.statusText}`);
+      const body = await serversResponse.text().catch(() => '');
+      throw new Error(`Scaleway API error ${serversResponse.status} ${serversResponse.statusText}: ${body.slice(0, 200)}`);
     }
 
     const serversData: ScalewayServersResponse = await serversResponse.json();
@@ -89,10 +81,16 @@ export async function fetchScalewayPlans() {
         // Get storage size (use max_size from volumes_constraint)
         const storageGB = server.volumes_constraint.max_size / (1024 * 1024 * 1024);
 
-        // Estimate monthly price (Scaleway pricing starts around €0.014/hour for small instances)
-        // This is a rough estimation based on specs since exact pricing requires separate API call
-        const basePrice = server.ncpus * 3.5 + ramInGB * 2.5;
-        const monthlyPrice = Math.round(basePrice * 100) / 100;
+        // Use actual pricing from API when available, fall back to hourly * 730 hours/month
+        let monthlyPrice: number;
+        if (server.monthly_price != null && server.monthly_price > 0) {
+          monthlyPrice = Math.round(server.monthly_price * 100) / 100;
+        } else if (server.hourly_price != null && server.hourly_price > 0) {
+          monthlyPrice = Math.round(server.hourly_price * 730 * 100) / 100;
+        } else {
+          // Skip plans with no pricing data
+          return null;
+        }
 
         // Determine features based on instance type
         const features: string[] = [
@@ -174,7 +172,8 @@ export async function fetchScalewayPlans() {
           tags,
           featured
         };
-      });
+      })
+      .filter((plan): plan is NonNullable<typeof plan> => plan !== null);
 
     console.log(`✅ Fetched ${transformedPlans.length} plans from Scaleway`);
     return transformedPlans;

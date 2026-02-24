@@ -44,28 +44,25 @@ export async function fetchVultrPlans() {
   }
 
   try {
-    // Fetch plans and regions in parallel
+    const headers = {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    };
+
+    // Fetch plans (paginated, default 100) and regions in parallel
     const [plansResponse, regionsResponse] = await Promise.all([
-      fetch('https://api.vultr.com/v2/plans', {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        }
-      }),
-      fetch('https://api.vultr.com/v2/regions', {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        }
-      })
+      fetch('https://api.vultr.com/v2/plans?per_page=500', { headers }),
+      fetch('https://api.vultr.com/v2/regions?per_page=500', { headers })
     ]);
 
     if (!plansResponse.ok) {
-      throw new Error(`Failed to fetch Vultr plans: ${plansResponse.status} ${plansResponse.statusText}`);
+      const body = await plansResponse.text().catch(() => '');
+      throw new Error(`Vultr plans API error ${plansResponse.status}: ${body.slice(0, 200)}`);
     }
 
     if (!regionsResponse.ok) {
-      throw new Error(`Failed to fetch Vultr regions: ${regionsResponse.status} ${regionsResponse.statusText}`);
+      const body = await regionsResponse.text().catch(() => '');
+      throw new Error(`Vultr regions API error ${regionsResponse.status}: ${body.slice(0, 200)}`);
     }
 
     const plansData: VultrPlansResponse = await plansResponse.json();

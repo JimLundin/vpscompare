@@ -45,14 +45,19 @@ export async function fetchHetznerPlans() {
       'Content-Type': 'application/json'
     };
 
-    // Fetch server types and locations
+    // Fetch server types (paginated, default 25) and locations in parallel
     const [serverTypesResponse, locationsResponse] = await Promise.all([
-      fetch('https://api.hetzner.cloud/v1/server_types', { headers }),
-      fetch('https://api.hetzner.cloud/v1/locations', { headers })
+      fetch('https://api.hetzner.cloud/v1/server_types?per_page=100', { headers }),
+      fetch('https://api.hetzner.cloud/v1/locations?per_page=100', { headers })
     ]);
 
-    if (!serverTypesResponse.ok || !locationsResponse.ok) {
-      throw new Error('Failed to fetch Hetzner data');
+    if (!serverTypesResponse.ok) {
+      const body = await serverTypesResponse.text().catch(() => '');
+      throw new Error(`Hetzner server_types API error ${serverTypesResponse.status}: ${body.slice(0, 200)}`);
+    }
+    if (!locationsResponse.ok) {
+      const body = await locationsResponse.text().catch(() => '');
+      throw new Error(`Hetzner locations API error ${locationsResponse.status}: ${body.slice(0, 200)}`);
     }
 
     const [serverTypesData, locationsData] = await Promise.all([

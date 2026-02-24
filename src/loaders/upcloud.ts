@@ -79,15 +79,18 @@ export async function fetchUpCloudPlans() {
     ]);
 
     if (!plansResponse.ok) {
-      throw new Error(`Failed to fetch UpCloud plans: ${plansResponse.status} ${plansResponse.statusText}`);
+      const body = await plansResponse.text().catch(() => '');
+      throw new Error(`UpCloud plans API error ${plansResponse.status}: ${body.slice(0, 200)}`);
     }
 
     if (!pricingResponse.ok) {
-      throw new Error(`Failed to fetch UpCloud pricing: ${pricingResponse.status} ${pricingResponse.statusText}`);
+      const body = await pricingResponse.text().catch(() => '');
+      throw new Error(`UpCloud pricing API error ${pricingResponse.status}: ${body.slice(0, 200)}`);
     }
 
     if (!zonesResponse.ok) {
-      throw new Error(`Failed to fetch UpCloud zones: ${zonesResponse.status} ${zonesResponse.statusText}`);
+      const body = await zonesResponse.text().catch(() => '');
+      throw new Error(`UpCloud zones API error ${zonesResponse.status}: ${body.slice(0, 200)}`);
     }
 
     const plansData: UpCloudPlansResponse = await plansResponse.json();
@@ -103,8 +106,9 @@ export async function fetchUpCloudPlans() {
       const ramInGB = plan.memory_amount / 1024;
 
       // Get pricing from first available zone (pricing may vary by zone)
-      const firstZone = Object.keys(pricingData.prices.zone)[0];
-      const planPricing = pricingData.prices.zone[firstZone]?.[`server_plan_${plan.name}`];
+      const zoneKeys = Object.keys(pricingData.prices.zone);
+      const firstZone = zoneKeys[0];
+      const planPricing = firstZone ? pricingData.prices.zone[firstZone]?.[`server_plan_${plan.name}`] : undefined;
 
       // Calculate monthly price from hourly (hourly * 730 hours/month)
       const hourlyPrice = planPricing ? parseFloat(planPricing.price) : 0;

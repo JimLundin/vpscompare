@@ -38,8 +38,13 @@ export async function fetchLinodePlans() {
       })
     ]);
 
-    if (!typesResponse.ok || !regionsResponse.ok) {
-      throw new Error('Failed to fetch Linode data');
+    if (!typesResponse.ok) {
+      const body = await typesResponse.text().catch(() => '');
+      throw new Error(`Linode types API error ${typesResponse.status}: ${body.slice(0, 200)}`);
+    }
+    if (!regionsResponse.ok) {
+      const body = await regionsResponse.text().catch(() => '');
+      throw new Error(`Linode regions API error ${regionsResponse.status}: ${body.slice(0, 200)}`);
     }
 
     const [typesData, regionsData] = await Promise.all([

@@ -53,10 +53,12 @@ jobs:
       - name: Build site
         run: npm run build
         env:
-          # Note: API keys are not required for build to succeed
-          # Loaders will skip providers if keys are not set
           DIGITALOCEAN_API_KEY: ${{ secrets.DIGITALOCEAN_API_KEY }}
           HETZNER_API_KEY: ${{ secrets.HETZNER_API_KEY }}
+          VULTR_API_KEY: ${{ secrets.VULTR_API_KEY }}
+          UPCLOUD_USERNAME: ${{ secrets.UPCLOUD_USERNAME }}
+          UPCLOUD_PASSWORD: ${{ secrets.UPCLOUD_PASSWORD }}
+          SCALEWAY_API_KEY: ${{ secrets.SCALEWAY_API_KEY }}
 
       - name: Check build output
         run: |

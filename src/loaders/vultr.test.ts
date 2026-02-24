@@ -173,7 +173,7 @@ describe('Vultr Loader', () => {
       const result = await fetchVultrPlans();
 
       expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('vultr-vc2-1c-1gb');
+      expect(result[0]!.id).toBe('vultr-vc2-1c-1gb');
     });
   });
 
@@ -214,7 +214,7 @@ describe('Vultr Loader', () => {
 
       const result = await fetchVultrPlans();
 
-      expect(result[0].specs.ram.amount).toBe(4);
+      expect(result[0]!.specs.ram.amount).toBe(4);
     });
 
     it('should correctly convert bandwidth from GB to TB', async () => {
@@ -253,7 +253,7 @@ describe('Vultr Loader', () => {
 
       const result = await fetchVultrPlans();
 
-      expect(result[0].specs.bandwidth.amount).toBe(2);
+      expect(result[0]!.specs.bandwidth.amount).toBe(2);
     });
   });
 });

@@ -41,6 +41,8 @@ describe('Scaleway Loader', () => {
               min_size: 20000000000, // 20GB
               max_size: 100000000000 // 100GB
             },
+            monthly_price: 7.99,
+            hourly_price: 0.011,
             baremetal: false,
             gpu: 0
           },
@@ -53,6 +55,8 @@ describe('Scaleway Loader', () => {
               min_size: 50000000000,
               max_size: 300000000000
             },
+            monthly_price: 23.99,
+            hourly_price: 0.033,
             baremetal: false,
             gpu: 0
           }
@@ -72,6 +76,7 @@ describe('Scaleway Loader', () => {
         provider: 'Scaleway',
         name: 'DEV1-S',
         price: {
+          monthly: 7.99,
           currency: 'EUR'
         },
         specs: {
@@ -98,8 +103,9 @@ describe('Scaleway Loader', () => {
       global.fetch = vi.fn().mockResolvedValueOnce({
         ok: false,
         status: 401,
-        statusText: 'Unauthorized'
-      } as Response);
+        statusText: 'Unauthorized',
+        text: async () => 'Unauthorized'
+      } as unknown as Response);
 
       const result = await fetchScalewayPlans();
 
@@ -124,6 +130,7 @@ describe('Scaleway Loader', () => {
               min_size: 20000000000,
               max_size: 100000000000
             },
+            monthly_price: 7.99,
             baremetal: false,
             gpu: 0
           },
@@ -136,6 +143,7 @@ describe('Scaleway Loader', () => {
               min_size: 1000000000000,
               max_size: 8000000000000
             },
+            monthly_price: 149.99,
             baremetal: true, // Should be filtered out
             gpu: 0
           }
@@ -167,6 +175,7 @@ describe('Scaleway Loader', () => {
               min_size: 20000000000,
               max_size: 100000000000
             },
+            monthly_price: 7.99,
             baremetal: false,
             gpu: 0
           },
@@ -179,6 +188,7 @@ describe('Scaleway Loader', () => {
               min_size: 200000000000,
               max_size: 400000000000
             },
+            monthly_price: 299.99,
             baremetal: false,
             gpu: 1 // Should be filtered out
           }
@@ -212,6 +222,7 @@ describe('Scaleway Loader', () => {
               min_size: 100000000000,
               max_size: 500000000000
             },
+            monthly_price: 47.99,
             baremetal: false,
             gpu: 0
           }
@@ -242,6 +253,7 @@ describe('Scaleway Loader', () => {
               min_size: 50000000000,
               max_size: 161061273600 // ~150GB
             },
+            monthly_price: 15.99,
             baremetal: false,
             gpu: 0
           }
@@ -272,6 +284,7 @@ describe('Scaleway Loader', () => {
               min_size: 50000000000,
               max_size: 300000000000
             },
+            monthly_price: 23.99,
             baremetal: false,
             gpu: 0
           },
@@ -284,6 +297,7 @@ describe('Scaleway Loader', () => {
               min_size: 20000000000,
               max_size: 100000000000
             },
+            monthly_price: 7.99,
             baremetal: false,
             gpu: 0
           }
